@@ -44,4 +44,8 @@
   License:\n\
     GPLv3 (c) Svetlana Linuxenko"
 
+
+#define SEARCH_FORM_INFO "\
+  Enter (sub)string or regexp to search for:\n\
+    (ESC/F10 to go back to services list)"
 #endif

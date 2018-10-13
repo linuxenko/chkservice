@@ -27,11 +27,15 @@
 #include <sstream>
 #include <iomanip>
 
+#include <boost/regex.hpp>
+
 MainWindow::MainWindow() {
   setSize();
 
   padding->x = 2;
   padding->y = 2;
+  searchPattern = NULL;
+  showBackInstructions = false;
 }
 
 MainWindow::~MainWindow() {
@@ -105,6 +109,7 @@ void MainWindow::createMenu() {
         toggleUnitSubState();
         break;
       case 'r':
+        clearFilter();
         updateUnits();
         drawUnits();
         error((char *)"Updated..");
@@ -114,6 +119,12 @@ void MainWindow::createMenu() {
         break;
       case KEY_RESIZE:
         resize();
+        break;
+      case '/':
+        searchWindow(screenSize, &searchPattern);
+        // After filtering, service units list becomes list of units matching search pattern
+        // To go back to full units list, user must press 'r'
+        filterUnits();
         break;
       default:
         break;
@@ -139,6 +150,8 @@ void MainWindow::moveUp() {
   }
 }
 
+#define MIN(a,b) (a<b) ? a : b;
+
 void MainWindow::moveDown() {
   int offset = start + selected;
   int ps = winSize->h - (padding->y + 1);
@@ -155,7 +168,7 @@ void MainWindow::moveDown() {
   }
 
   if (offset >= max) {
-    selected = ps;
+    selected = MIN(max,ps);
   }
 
   if (units[start + selected]->id.size() == 0) {
@@ -207,6 +220,49 @@ void MainWindow::reloadAll() {
   }
 }
 
+
+void MainWindow::clearFilter()
+{
+  showBackInstructions = false;
+  units.clear();
+  units.shrink_to_fit();
+}
+
+void MainWindow::filterUnits()
+{
+  if (!searchPattern) {
+    return;
+  }
+
+  std::vector<UnitItem *> tmpUnits;
+
+  boost::regex expr(searchPattern);
+  boost::smatch what;
+
+  for (auto unit : units) {
+    if (boost::regex_search(unit->id, what, expr)) {
+      tmpUnits.push_back(unit);
+    }
+  }
+
+  if (tmpUnits.empty()) {
+    error((char *)"No matches found.");
+  } else {
+    units.clear();
+    units.shrink_to_fit();
+
+    /* Make units list the filtered units list */
+    units = tmpUnits;
+
+    start = 0;
+    selected = 0;
+    showBackInstructions = true;
+  }
+
+  free(searchPattern);
+  searchPattern = NULL;
+}
+
 void MainWindow::updateUnits() {
   units.clear();
   units.shrink_to_fit();
@@ -217,6 +273,7 @@ void MainWindow::updateUnits() {
   } catch(std::string &err) {
     error((char *)err.c_str());
   }
+
 }
 
 void MainWindow::drawUnits() {
@@ -247,6 +304,7 @@ void MainWindow::drawUnits() {
   refresh();
   wrefresh(win);
 }
+
 
 void MainWindow::drawItem(UnitItem *unit, int y) {
   if (unit->id.size() == 0) {
@@ -357,16 +415,24 @@ void MainWindow::drawInfo() {
   printInMiddle(win, winSize->h + 1, 0, (winSize->w / 2), (char *)position.str().c_str(), COLOR_PAIR(5), (char *)NULL);
 
   wattron(win, COLOR_PAIR(4));
-  mvwprintw(win, winSize->h + 1, winSize->w - 10, "? - help");
+  mvwprintw(win, winSize->h + 1, winSize->w - 22, "? - help, / - search");
   wattroff(win, COLOR_PAIR(4));
+
+  if (showBackInstructions) {
+    // Remind user to press 'r' to return to full services list
+    error ((char *)"Press 'r' to return to full services list");
+  }
 }
 
 void MainWindow::error(char *err) {
+  // Make error message a bit more visible
+  wattron(win, COLOR_PAIR(2));
   mvwprintw(win, 0, 0, std::string(winSize->w, ' ').c_str());
 
   if (err) {
     mvwprintw(win, 0, 1, err);
   }
+  wattroff(win, COLOR_PAIR(2));
 }
 
 void MainWindow::toggleUnitState() {

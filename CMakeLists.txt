@@ -29,9 +29,14 @@ include_directories(${SYSTEMD_INCLUDE_DIRS})
 set(LIBS ${LIBS} ${SYSTEMD_LIBRARIES})
 
 pkg_check_modules(NCURSES ncurses REQUIRED)
+pkg_check_modules(FORM form REQUIRED)
 
 include_directories(${NCURSES_INCLUDE_DIRS})
+include_directories(${FORM_INCLUDE_DIRS})
 set(LIBS ${LIBS} ${NCURSES_LIBRARIES})
+set(LIBS ${LIBS} ${FORM_LIBRARIES})
+
+find_package(Boost REQUIRED COMPONENTS regex)
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/src)
 

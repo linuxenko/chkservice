@@ -22,6 +22,7 @@
 #define _CHKUI_H
 
 #include <curses.h>
+#include <form.h>
 #include "chk-ctl.h"
 
 typedef struct RECTANGLE {
@@ -43,6 +44,12 @@ class MainWindow {
     RECTANGLE *padding = new RECTANGLE();
     ChkCTL *ctl = new ChkCTL;
     std::vector<UnitItem *> units;
+
+    char *searchPattern;
+    // Defines whether instructions on how to go back to full services list
+    // must be displayed
+    bool showBackInstructions;
+
     int selected = 0;
     int start = 0;
     void createWindow();
@@ -53,6 +60,10 @@ class MainWindow {
     void movePageUp();
     void movePageDown();
     void drawUnits();
+
+    void filterUnits();
+    void clearFilter();
+
     void drawItem(UnitItem *unit, int y);
     void drawInfo();
     void toggleUnitState();
@@ -67,5 +78,6 @@ void stopCurses();
 void printInMiddle(WINDOW *win, int starty, int startx, int width,
     char *string, chtype color, char *sp);
 void aboutWindow(RECTANGLE *parent);
+void searchWindow(RECTANGLE *parent, char **searchText);
 
 #endif
