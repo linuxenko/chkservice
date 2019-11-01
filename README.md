@@ -46,11 +46,13 @@ dnf install chkservice
 Package dependencies:
   * libncurses5
   * libsystemd0 ( >= 222 )
+  * libboost-regex1.xx.y (tested with 1.58.0 & 1.65.1)
   
 Build dependencies:
   * pkg-config
   * libncurses5-dev
   * libsystemd-dev ( >= 222 )
+  * libboost-regex-dev
 
 ### Build
 
