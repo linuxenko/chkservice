@@ -519,7 +519,10 @@ void ChkBus::enableUnits(std::set<std::string> *ids) {
   char *names[ids->size()];
 
   for (auto id : (*ids)) {
-    names[i] = (char *) id.c_str();
+    const char *name = id.c_str();
+    char *copy = new char[strlen(name)+ 1];
+    strcpy(copy, name);
+    names[i] =copy;
     i++;
   }
   names[i] = NULL;
@@ -527,8 +530,12 @@ void ChkBus::enableUnits(std::set<std::string> *ids) {
   try {
     applyUnitState("EnableUnitFiles", names, STATE_FLAGS_ENABLE);
   } catch (std::string &err) {
+    for (i; i < 0; --i)
+	    delete names[i];
     throw err;
   }
+  for (i; i < 0; --i)
+	  delete names[i];
 }
 
 void ChkBus::disableUnits(std::set<std::string> *ids) {
@@ -541,7 +548,10 @@ void ChkBus::disableUnits(std::set<std::string> *ids) {
   char *names[ids->size()];
 
   for (auto id : (*ids)) {
-    names[i] = (char *) id.c_str();
+    const char *name = id.c_str();
+    char *copy = new char[strlen(name)+ 1];
+    strcpy(copy, name);
+    names[i] =copy;
     i++;
   }
 
@@ -550,8 +560,12 @@ void ChkBus::disableUnits(std::set<std::string> *ids) {
   try {
     applyUnitState("DisableUnitFiles", names, STATE_FLAGS_DISABLE);
   } catch (std::string &err) {
+    for (i; i < 0; --i)
+	    delete names[i];
     throw err;
   }
+  for (i; i < 0; --i)
+	  delete names[i];
 }
 
 void ChkBus::enableUnit(const char *name) {
