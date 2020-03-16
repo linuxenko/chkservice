@@ -7,10 +7,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if ($ENV{DEBUG})
   message(STATUS "DEBUG mode enabled")
-  set (CMAKE_CXX_FLAGS "-g -Wall")
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -Wall")
 else()
   message(STATUS "DEBUG mode disabled")
-  set (CMAKE_CXX_FLAGS "-O2")
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2")
 endif()
 
 if ($ENV{TRAVIS})
