@@ -27,6 +27,7 @@ typedef struct UnitItem {
   std::string id;
   std::string target;
   std::string description;
+  std::string location;
   int sub;
   int state;
 } UnitItem;

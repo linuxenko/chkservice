@@ -78,6 +78,7 @@ class MainWindow {
     void error(char *err);
     void reloadAll();
     void listInput(int key);
+    void openEditor();
     /*
      * Status bar
      */
