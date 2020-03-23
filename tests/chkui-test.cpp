@@ -1,6 +1,5 @@
 #include <iostream>
-#include <catch.hpp>
-
+#include <catch2/catch.hpp>
 #include "chk-ui.h"
 
 using namespace std;
