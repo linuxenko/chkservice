@@ -151,6 +151,29 @@ void MainWindow::listInput(int key) {
   }
 }
 
+void MainWindow::openEditor() {
+  std::string UserEditor;
+
+  if (getenv("SERVICE_EDITOR") != NULL) {
+    UserEditor = getenv("SERVICE_EDITOR");
+  } else if (getenv("EDITOR") != NULL) {
+    UserEditor = getenv("EDITOR");
+  } else {
+    error((char *)"Environmental variable EDITOR is not defined");
+    return;
+  }
+  
+  std::string execute = UserEditor + ' ' + units[start + selected]->location;
+
+  if(system(execute.c_str()) > 0){
+    resize();
+    error((char *)"Could not open file, environmental variable EDITOR likely not executable");
+    return;
+  };
+
+  resize();
+}
+
 void MainWindow::searchInput(int key) {
   int slen;
 
@@ -561,26 +584,4 @@ void MainWindow::toggleUnitSubState() {
   } catch (std::string &err) {
     error((char *)err.c_str());
   }
-}
-
-void MainWindow::openEditor() {
-  std::string UserEditor;
-
-  if (getenv("SERVICE_EDITOR") != NULL) {
-    UserEditor = getenv("SERVICE_EDITOR");
-  } else if (getenv("EDITOR") != NULL) {
-    UserEditor = getenv("EDITOR");
-  } else {
-    error((char *)"Environmental variable EDITOR is not defined");
-    return;
-  }
-  
-  std::string execute = UserEditor + ' ' + units[start + selected]->location;
-
-  if(system(execute.c_str()) != -1){
-    resize();
-    error((char *)"Could not open file, environmental variable EDITOR likely not executable");
-  };
-
-  resize();
 }
