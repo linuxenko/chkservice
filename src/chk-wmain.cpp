@@ -162,10 +162,18 @@ void MainWindow::openEditor() {
     error((char *)"Environmental variable EDITOR is not defined");
     return;
   }
-  
-  std::string execute = UserEditor + ' ' + units[start + selected]->location;
 
-  if(system(execute.c_str()) > 0){
+  UnitItem* selectedUnit = units[start + selected];
+
+  if (selectedUnit->editable == false) {
+    std::string err = selectedUnit->location + ' ' + "is not an editable file";
+    error((char *)err.c_str());
+    return;
+  }
+  
+  std::string execute = UserEditor + ' ' + selectedUnit->location;
+
+  if (system(execute.c_str()) > 0) {
     resize();
     error((char *)"Could not open file, environmental variable EDITOR likely not executable");
     return;
