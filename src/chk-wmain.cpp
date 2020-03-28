@@ -143,9 +143,43 @@ void MainWindow::listInput(int key) {
     case KEY_RESIZE:
       resize();
       break;
+    case 'e':
+      openEditor();
+      break;
     default:
       break;
   }
+}
+
+void MainWindow::openEditor() {
+  std::string UserEditor;
+
+  if (getenv("SERVICE_EDITOR") != NULL) {
+    UserEditor = getenv("SERVICE_EDITOR");
+  } else if (getenv("EDITOR") != NULL) {
+    UserEditor = getenv("EDITOR");
+  } else {
+    error((char *)"Environmental variable EDITOR is not defined");
+    return;
+  }
+
+  UnitItem* selectedUnit = units[start + selected];
+
+  if (selectedUnit->editable == false) {
+    std::string err = selectedUnit->location + ' ' + "is not an editable file";
+    error((char *)err.c_str());
+    return;
+  }
+  
+  std::string execute = UserEditor + ' ' + selectedUnit->location;
+
+  if (system(execute.c_str()) > 0) {
+    resize();
+    error((char *)"Could not open file, environmental variable EDITOR likely not executable");
+    return;
+  };
+
+  resize();
 }
 
 void MainWindow::searchInput(int key) {

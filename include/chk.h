@@ -41,6 +41,7 @@
 \n\
     r     - reload/update.   q - exit.\n\
     Space - enable/disable.  s - start/stop unit.\n\
+    e - edit unit\n\
 \n\
   License:\n\
     GPLv3 (c) Svetlana Linuxenko"

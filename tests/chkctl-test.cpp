@@ -1,5 +1,5 @@
 #include <iostream>
-#include <catch.hpp>
+#include <catch2/catch.hpp>
 #include "chk-ctl.h"
 
 using namespace std;

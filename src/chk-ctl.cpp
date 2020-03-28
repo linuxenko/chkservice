@@ -100,8 +100,15 @@ void ChkCTL::pushItem(UnitInfo *unit) {
 
   item->id = id;
   item->target = id.substr(id.find_last_of('.') + 1, id.length());
-  item->description = std::string((unit->description == NULL ?
-      unit->unitPath : unit->description));
+  item->location = std::string(unit->unitPath);
+
+  if (unit->description != NULL) {
+    item->description = unit->description;
+    item->editable = false;
+  } else {
+    item->description = unit->unitPath;
+    item->editable = true;
+  }
 
   if (unit->state != NULL) {
     std::string state(unit->state);

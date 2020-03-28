@@ -76,11 +76,11 @@ make Test
   * v0.3 - Search using `/` key added
   * v0.3 - Emacs key bindings implemented
   * v0.2 - Integration with Travis was fixed
-  * v0.2 - Window resize supoport added by Gilles Talis <gilles.talis@gmail.com>
+  * v0.2 - Window resize support added by Gilles Talis <gilles.talis@gmail.com>
 
 
 ### License
 GNU General Public License
 
 chkservice is a tool for managing systemd units.
-more infomration at https://github.com/linuxenko/chkservice
+more information at https://github.com/linuxenko/chkservice
